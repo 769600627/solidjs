@@ -354,33 +354,103 @@ systemctl enable openclaw-ensure.service
 systemctl start openclaw-ensure.service
 systemctl status openclaw-ensure.service --no-pager`}</pre>
 
-                    <h2>七、权限与目录复刻</h2>
-                    <p>商店版 OpenClaw 应由独立用户运行。若另一台设备上用户不存在，通常应由 FnOS App Center 安装商店包自动创建，不建议手工乱建。若你是在恢复备份，需要检查：</p>
+                    <h2>七、权限统一：复刻成功的关键</h2>
+                    <p><strong>这是整套方案最容易踩坑、也最必须强调的部分：</strong>商店版 OpenClaw 的运行用户不是 root，而是 FnOS 为商店应用创建的独立用户 <code>trim.openclaw</code>。如果用 root 运行过安装、更新或修复命令，很容易把 <code>node_modules</code>、<code>.openclaw</code>、<code>sessions</code>、<code>runtime</code> 等目录污染成 root 属主，最终导致商店版进程读写失败、更新失败、会话不可写，或者出现“root 版能跑、商店版不能跑”的混乱状态。</p>
+
+                    <p>复刻环境时应坚持一条铁律：</p>
+
+                    <pre>{`商店版 OpenClaw 的数据目录、配置目录、安装目录、运行目录、workspace，统一归 trim.openclaw:trim.openclaw。
+root 只负责 systemd、FnOS 应用脚本、必要的文件修复；不要让 root 成为 OpenClaw 运行态文件的属主。`}</pre>
+
+                    <h3>7.1 先确认商店用户存在</h3>
+                    <p>另一台设备上，<code>trim.openclaw</code> 用户通常由 FnOS App Center 安装商店包时自动创建。不要优先手工创建用户；如果用户不存在，优先重新安装或修复商店包。</p>
 
                     <pre>{`id trim.openclaw
+getent passwd trim.openclaw
+getent group trim.openclaw`}</pre>
 
-ls -ld \
-  /vol1/@apphome/trim.openclaw/data \
-  /vol1/@apphome/trim.openclaw/data/openclaw \
-  /vol1/@apphome/trim.openclaw/data/home \
-  /vol1/@apphome/trim.openclaw/data/home/.openclaw
+                    <p>预期结果类似：</p>
 
-ls -l /vol1/@apphome/trim.openclaw/data/home/.openclaw/openclaw.json`}</pre>
+                    <pre>{`uid=xxx(trim.openclaw) gid=xxx(trim.openclaw) groups=...,AppUsers,OfficialAppUsers,trim.openclaw`}</pre>
 
-                    <p>推荐权限：</p>
+                    <h3>7.2 统一属主范围</h3>
+                    <p>需要统一归属的核心目录：</p>
+
+                    <pre>{`/vol1/@apphome/trim.openclaw/data
+/vol1/@apphome/trim.openclaw/data/openclaw
+/vol1/@apphome/trim.openclaw/data/openclaw/node_modules
+/vol1/@apphome/trim.openclaw/data/home
+/vol1/@apphome/trim.openclaw/data/home/.openclaw
+/vol1/@apphome/trim.openclaw/data/runtime
+/vol1/@apphome/trim.openclaw/data/state
+/vol1/@apphome/trim.openclaw/data/workspace
+/vol1/@apphome/trim.openclaw/data/monitor`}</pre>
+
+                    <p>检查命令：</p>
+
+                    <pre>{`find /vol1/@apphome/trim.openclaw/data \
+  -maxdepth 4 \
+  \( ! -user trim.openclaw -o ! -group trim.openclaw \) \
+  -printf '%u:%g %m %p\n' | head -n 100`}</pre>
+
+                    <p>如果有输出，说明存在 root 或其他用户污染。修复：</p>
 
                     <pre>{`chown -R trim.openclaw:trim.openclaw /vol1/@apphome/trim.openclaw/data
-chmod -R 750 /vol1/@apphome/trim.openclaw/data
-chmod 700 /vol1/@apphome/trim.openclaw/data/home/.openclaw
-chmod 640 /vol1/@apphome/trim.openclaw/data/home/.openclaw/openclaw.json`}</pre>
+chmod -R u+rwX,g+rX,o-rwx /vol1/@apphome/trim.openclaw/data`}</pre>
 
+                    <h3>7.3 推荐权限基线</h3>
+                    <p>为了既能让商店版运行，又避免过度开放权限，推荐基线如下：</p>
+
+                    <pre>{`# 数据根目录：商店用户可读写，组可读进，其他用户不可访问
+chown -R trim.openclaw:trim.openclaw /vol1/@apphome/trim.openclaw/data
+chmod 750 /vol1/@apphome/trim.openclaw/data
+chmod 750 /vol1/@apphome/trim.openclaw/data/openclaw
+chmod 750 /vol1/@apphome/trim.openclaw/data/home
+chmod 700 /vol1/@apphome/trim.openclaw/data/home/.openclaw
+chmod 750 /vol1/@apphome/trim.openclaw/data/runtime
+chmod 750 /vol1/@apphome/trim.openclaw/data/state
+chmod 750 /vol1/@apphome/trim.openclaw/data/workspace
+
+# 配置文件：含模型、渠道、Gateway 等配置，禁止其他用户读取
+chmod 640 /vol1/@apphome/trim.openclaw/data/home/.openclaw/openclaw.json
+
+# CLI wrapper：由商店用户执行
+chown trim.openclaw:trim.openclaw /var/apps/trim.openclaw/target/bin/openclaw
+chmod 770 /var/apps/trim.openclaw/target/bin/openclaw`}</pre>
+
+                    <h3>7.4 所有 OpenClaw CLI 操作都应以商店用户执行</h3>
+                    <p>需要查看版本、安装插件、执行诊断时，不要直接 root 执行 <code>openclaw</code>。正确方式是用 <code>runuser</code> 切到 <code>trim.openclaw</code>，并显式带上商店版 HOME 与配置路径：</p>
+
+                    <pre>{`runuser -u trim.openclaw -- env \
+  HOME=/vol1/@apphome/trim.openclaw/data/home \
+  OPENCLAW_DATA_DIR=/vol1/@apphome/trim.openclaw/data \
+  OPENCLAW_CONFIG_PATH=/vol1/@apphome/trim.openclaw/data/home/.openclaw/openclaw.json \
+  PATH=/var/apps/bunjs/target/bin:/var/apps/nodejs_v24/target/bin:/vol1/@apphome/trim.openclaw/data/openclaw/node_modules/.bin:$PATH \
+  /var/apps/trim.openclaw/target/bin/openclaw --version`}</pre>
+
+                    <p>插件安装也同理：</p>
+
+                    <pre>{`runuser -u trim.openclaw -- env \
+  HOME=/vol1/@apphome/trim.openclaw/data/home \
+  OPENCLAW_DATA_DIR=/vol1/@apphome/trim.openclaw/data \
+  OPENCLAW_CONFIG_PATH=/vol1/@apphome/trim.openclaw/data/home/.openclaw/openclaw.json \
+  PATH=/var/apps/bunjs/target/bin:/var/apps/nodejs_v24/target/bin:/vol1/@apphome/trim.openclaw/data/openclaw/node_modules/.bin:$PATH \
+  /var/apps/trim.openclaw/target/bin/openclaw plugins install @openclaw/qqbot@latest --force`}</pre>
+
+                    <h3>7.5 验证进程绝不能跑成 root</h3>
                     <p>Gateway 进程应满足：</p>
 
                     <pre>{`# 进程用户应为 trim.openclaw
-ps -eo pid,ppid,user,group,cmd | grep -E 'trim.openclaw|server/index.js|openclaw' | grep -v grep
+ps -eo pid,ppid,user,group,cwd,cmd | grep -E 'trim.openclaw|server/index.js|openclaw' | grep -v grep
 
-# 端口应只监听 loopback
-ss -ltnp | grep 25730`}</pre>
+# 端口应只监听 loopback 的商店版端口
+ss -ltnp | grep 25730
+
+# 当前工作目录应是商店版安装目录
+readlink -f /proc/<GATEWAY_PID>/cwd
+# 预期：/vol1/@apphome/trim.openclaw/data/openclaw`}</pre>
+
+                    <p>如果看到 <code>root</code> 用户运行的 <code>openclaw</code>，或者 cwd 是 <code>/app</code>、端口是其他值，那通常不是商店版，排查时必须排除，避免将 Docker 版或手工版误认为商店版。</p>
 
                     <h2>八、控制面板“检查更新”按钮的真实逻辑</h2>
                     <p>商店版控制面板前端按钮位于 UI bundle 中，点击“检查更新”后并不是只检查版本，而是弹出确认框，确认后调用后端安装接口：</p>
