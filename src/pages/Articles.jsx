@@ -14,7 +14,7 @@ export default function Articles() {
             subtitle: 'FnOS App Center · trim.openclaw · systemd 兜底自启 · Gateway loopback · 插件优先更新',
             date: '2026-05-29',
             tags: ['FnOS', 'OpenClaw', 'systemd', 'Bun', 'Gateway'],
-            summary: '完整记录飞牛系统商店版 OpenClaw 的运行路径、用户权限、systemd 兜底启动脚本、控制面板检查更新按钮逻辑，以及更新前检查商店插件、优先升级渠道插件的优化方案。按文中路径与脚本，可在另一台 FnOS 设备复刻一致运行环境。',
+            summary: '完整记录飞牛系统商店版 OpenClaw 的运行路径、用户权限、systemd 兜底启动脚本、控制面板检查更新按钮逻辑，以及更新前检查商店插件、优先升级渠道插件的优化方案。按文中路径、脚本、运行用户与权限基线，可在另一台 FnOS 设备复刻一致运行环境，避免 root 权限污染。',
             slug: 'fnos-openclaw-store-optimization'
         },
         {
