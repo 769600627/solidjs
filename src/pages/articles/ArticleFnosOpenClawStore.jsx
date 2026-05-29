@@ -12,8 +12,8 @@ export default function ArticleFnosOpenClawStore() {
             <div class="article-container reveal">
                 <A href="/articles" class="back-link">← 返回文章列表</A>
                 <div class="article-header">
-                    <h1>飞牛系统商店版 OpenClaw 优化实战：启动守护、路径复刻与更新按钮增强</h1>
-                    <p class="article-subtitle">FnOS App Center · trim.openclaw · systemd 兜底自启 · Gateway loopback · 插件优先更新</p>
+                    <h1>飞牛系统商店版 OpenClaw 优化实战：开机自启、状态修复、备份复用与更新按钮增强</h1>
+                    <p class="article-subtitle">FnOS App Center · trim.openclaw · systemd 兜底自启 · Gateway loopback · root Monitor 根治 · 一键备份恢复</p>
                     <div class="article-meta">
                         <span class="article-date">2026-05-29</span>
                         <div class="article-tags">
@@ -29,27 +29,31 @@ export default function ArticleFnosOpenClawStore() {
                 <div class="article-content">
 
                     <h2>一、写在前面：本文解决什么问题</h2>
-                    <p>飞牛系统（FnOS）商店版 OpenClaw 的运行方式与普通 Docker 部署不同。它不是直接由 root 启动一个裸进程，而是由 FnOS App Center 管理应用包，再由商店版 Monitor 启动 OpenClaw Gateway。本文记录一次完整的商店版 OpenClaw 优化过程：反向定位运行路径、补齐开机自启兜底脚本、梳理控制面板“检查更新”按钮的真实逻辑，并给出可复刻的代码与目录结构。</p>
+                    <p>飞牛系统（FnOS）商店版 OpenClaw 的运行方式与普通 Docker 部署不同。它不是直接由 root 启动一个裸进程，而是由 FnOS App Center 管理应用包，再由商店版 Monitor 启动 OpenClaw Gateway。本文记录一次完整的商店版 OpenClaw 优化过程：反向定位运行路径、修复开机自启、根治 root Monitor 残留、修复控制面板卡“启动中”、梳理“检查更新”按钮的真实逻辑，并沉淀出一份可一键还原或迁移复用的完整备份方案。</p>
 
                     <p>本文所有域名、Token、用户名、内网地址均做脱敏处理。示例中的 <code>example.com</code>、<code>192.168.x.x</code>、<code>&lt;TOKEN&gt;</code> 等请替换为你自己的环境。</p>
 
                     <h2>二、目标架构</h2>
                     <p>优化后的商店版 OpenClaw 采用以下链路：</p>
 
-                    <pre>{`FnOS systemd
-  → openclaw-ensure.service
-    → /usr/local/sbin/openclaw-ensure.sh
-      → /var/apps/trim.openclaw/cmd/main start
-        → bun /vol1/@appcenter/trim.openclaw/server/index.js
-          → /var/apps/trim.openclaw/target/bin/openclaw
-            → /vol1/@apphome/trim.openclaw/data/openclaw/node_modules/.bin/openclaw
-              → Gateway: 127.0.0.1:25730`}</pre>
+                    <pre>{`FnOS systemd / App Center
+  ├─ FnOS App Center
+  │   → /var/apps/trim.openclaw/cmd/main start
+  │     → bun /vol1/@appcenter/trim.openclaw/server/index.js
+  │       → Monitor Unix Socket: /vol1/@appcenter/trim.openclaw/trim.openclaw.sock
+  │
+  └─ openclaw-ensure.service
+      → /usr/local/sbin/openclaw-ensure.sh
+        → 等待 trim.openclaw 用户下的 Monitor 就绪
+        → runuser -u trim.openclaw -- openclaw gateway run --port 25730 --bind loopback
+          → Gateway: 127.0.0.1:25730 / [::1]:25730`}</pre>
 
                     <p>关键设计原则：</p>
                     <ul>
                         <li><strong>商店版独立用户运行</strong>：使用 <code>trim.openclaw</code> 用户，不与 root 或 Docker 版混用。</li>
                         <li><strong>Gateway 仅监听 loopback</strong>：默认 <code>127.0.0.1:25730</code>，避免直接暴露到局域网或公网。</li>
-                        <li><strong>systemd 只做兜底</strong>：真正的应用生命周期仍交给 FnOS 商店脚本 <code>cmd/main</code>。</li>
+                        <li><strong>Monitor 归 FnOS App Center</strong>：<code>cmd/main</code> 由商店体系调用，避免 systemd/root 直接拉起 Monitor。</li>
+                        <li><strong>systemd 只兜底 Gateway</strong>：<code>openclaw-ensure.service</code> 等待 Monitor 后，仅以 <code>trim.openclaw</code> 启动 Gateway。</li>
                         <li><strong>更新前优雅停止 Gateway</strong>：避免安装包替换过程中进程仍占用旧文件。</li>
                         <li><strong>更新 OpenClaw 前先检查商店插件</strong>：如果 FnOS 商店包本身有更新，优先提示先升级商店包。</li>
                         <li><strong>OpenClaw 升级前先更新渠道插件</strong>：例如 QQBot，避免 OpenClaw 基底升级后插件 SDK 不兼容。</li>
@@ -101,6 +105,35 @@ export default function ArticleFnosOpenClawStore() {
 /var/apps/nodejs_v24/target/bin/node --version`}</pre>
 
                     <p>在本次环境中，Bun 为 1.3.x，Node.js 为 v24.x。你不必强求小版本完全一致，但建议 Bun ≥ 1.3.9，Node.js 使用 FnOS 商店依赖中声明的 v24 系列。</p>
+
+                    <h3>3.1 本次修复后的运行快照</h3>
+                    <p>以下是本文最终落地后的真实运行状态，可作为排查时的基准线：</p>
+
+                    <pre>{`主机：FnOS
+内核：Linux 6.18.18-trim x86_64
+商店应用：trim.openclaw
+商店包版本：0.0.10
+OpenClaw Gateway：127.0.0.1:25730 / [::1]:25730
+Monitor Socket：/vol1/@appcenter/trim.openclaw/trim.openclaw.sock
+systemd：openclaw-ensure.service enabled / active (exited)
+
+Monitor:
+  用户：trim.openclaw
+  进程：bun /vol1/@appcenter/trim.openclaw/server/index.js
+  PID 文件：/vol1/@appdata/trim.openclaw/app.pid
+
+Gateway:
+  用户：trim.openclaw
+  工作目录：/vol1/@apphome/trim.openclaw/data/openclaw
+  PID 文件：/vol1/@apphome/trim.openclaw/data/runtime/gateway.pid
+  配置：/vol1/@apphome/trim.openclaw/data/home/.openclaw/openclaw.json
+
+Monitor DB:
+  /vol1/@apphome/trim.openclaw/data/monitor/monitor.sqlite
+  instances.default.status = running
+  instances.default.gateway_port = 25730`}</pre>
+
+                    <p>注意：如果同时存在 Docker 版或手工版 OpenClaw，例如 root 用户、cwd 为 <code>/app</code>、监听 <code>0.0.0.0:18789</code>，它不是本文所说的 FnOS 商店版。排查商店版时必须把这一路排除。</p>
 
                     <h2>四、商店版主启动脚本 cmd/main</h2>
                     <p>商店版主脚本位于：</p>
@@ -259,8 +292,8 @@ exec "/vol1/@apphome/trim.openclaw/data/openclaw/node_modules/.bin/openclaw" "$@
                     <pre>{`chown trim.openclaw:trim.openclaw /var/apps/trim.openclaw/target/bin/openclaw
 chmod 770 /var/apps/trim.openclaw/target/bin/openclaw`}</pre>
 
-                    <h2>六、systemd 兜底启动脚本</h2>
-                    <p>FnOS 商店脚本可能只负责 App Center 生命周期；如果系统重启后 Monitor 或 Gateway 没有按预期起来，可以增加一个轻量的 systemd 兜底服务。</p>
+                    <h2>六、systemd 兜底启动脚本：只拉 Gateway，不拉 Monitor</h2>
+                    <p>这一节是本文后半段修复的核心。最初的兜底脚本直接以 root 调用 <code>/var/apps/trim.openclaw/cmd/main start</code>，结果导致同一台机器上出现两个 Monitor：一个 root 拉起，一个 FnOS App Center 以 <code>trim.openclaw</code> 拉起。最终方案是：<strong>Monitor 交给 FnOS App Center，systemd ensure 只等待 Monitor，然后只负责以 <code>trim.openclaw</code> 启动 Gateway。</strong></p>
 
                     <h3>6.1 systemd unit</h3>
                     <p>创建：</p>
@@ -288,63 +321,116 @@ WantedBy=multi-user.target`}</pre>
 
                     <pre>{`/usr/local/sbin/openclaw-ensure.sh`}</pre>
 
-                    <p>推荐代码如下。注意：该脚本只检查商店版 Gateway 的 loopback 端口，不检查 Docker 版或其他 root 进程。</p>
+                    <p>推荐代码如下。它会读取商店版路径、清理旧 lock、等待 <code>trim.openclaw</code> 用户下的 Monitor，再用 <code>runuser</code> 启动 Gateway。注意：这里故意不再调用 <code>cmd/main start</code>。</p>
 
-                    <pre>{`#!/usr/bin/env bash
-set -euo pipefail
+                    <pre>{`#!/bin/bash
+# OpenClaw Gateway Ensure Script
+# Called by systemd at boot to ensure FnOS store Monitor + Gateway are running.
 
-APP_NAME="trim.openclaw"
-APP_MAIN="/var/apps/\${APP_NAME}/cmd/main"
-GATEWAY_HOST="127.0.0.1"
-GATEWAY_PORT="25730"
-LOG_FILE="/var/log/openclaw-ensure.log"
+set -e
+
+LOG="/var/log/openclaw-ensure.log"
+APP_MAIN="/var/apps/trim.openclaw/cmd/main"
+PORT="25730"
+OC_USER="trim.openclaw"
+OC_DATA_DIR="/vol1/@apphome/trim.openclaw/data"
+OC_INSTALL_DIR="\${OC_DATA_DIR}/openclaw"
+OC_HOME_DIR="\${OC_DATA_DIR}/home"
+OC_CONFIG_PATH="\${OC_HOME_DIR}/.openclaw/openclaw.json"
+OC_BINARY="\${OC_INSTALL_DIR}/node_modules/.bin/openclaw"
+OC_GATEWAY_LOG="\${OC_INSTALL_DIR}/gateway.log"
+OC_RUNTIME_DIR="\${OC_DATA_DIR}/runtime"
+OC_PID_PATH="\${OC_RUNTIME_DIR}/gateway.pid"
+OC_ENV_PATH="\${OC_INSTALL_DIR}/.env"
 
 log() {
-  printf '%s %s\n' "$(date '+%F %T')" "$*" >> "\${LOG_FILE}"
+    echo "$(date '+%F %T') $*" >> "$LOG"
 }
 
-is_listening() {
-  ss -ltn 2>/dev/null | awk '{print $4}' | grep -Eq "(^|:)\${GATEWAY_PORT}$"
+port_listening() {
+    ss -tln 2>/dev/null | grep -q ":\${PORT} "
 }
 
-http_ready() {
-  curl -fsS --max-time 3 "http://\${GATEWAY_HOST}:\${GATEWAY_PORT}/" >/dev/null 2>&1
+find_gateway_pid() {
+    ss -tlnp 2>/dev/null | grep ":\${PORT} " | grep -oP 'pid=\K[0-9]+' | head -1
 }
 
-start_store_app() {
-  if [ ! -x "\${APP_MAIN}" ]; then
-    log "ERROR: \${APP_MAIN} not found or not executable"
-    return 1
-  fi
+if [ -z "$TRIM_PKGVAR" ]; then
+    export TRIM_PKGVAR="/vol1/@appdata/trim.openclaw"
+    export TRIM_PKGHOME="/vol1/@apphome/trim.openclaw"
+    export TRIM_APPDEST="/vol1/@appcenter/trim.openclaw"
+fi
 
-  log "starting \${APP_NAME} via \${APP_MAIN} start"
-  "\${APP_MAIN}" start || true
-}
+mkdir -p "$(dirname "$LOG")" "$OC_RUNTIME_DIR"
+touch "$LOG" "$OC_GATEWAY_LOG"
+chown "$OC_USER:$OC_USER" "$OC_RUNTIME_DIR" "$OC_GATEWAY_LOG" 2>/dev/null || true
 
-wait_ready() {
-  local i
-  for i in $(seq 1 60); do
-    if is_listening || http_ready; then
-      log "OpenClaw Gateway is ready on \${GATEWAY_HOST}:\${GATEWAY_PORT}"
-      return 0
+if [ -f "$OC_ENV_PATH" ]; then
+    env_port=$(grep -E '^PORT=' "$OC_ENV_PATH" 2>/dev/null | head -1 | cut -d= -f2- | tr -d "'")
+    if [ -n "$env_port" ]; then PORT="$env_port"; fi
+fi
+
+if port_listening; then
+    pid=$(find_gateway_pid || true)
+    if [ -n "$pid" ]; then
+        printf "%s" "$pid" > "$OC_PID_PATH"
+        chown "$OC_USER:$OC_USER" "$OC_PID_PATH" 2>/dev/null || true
     fi
-    sleep 2
-  done
-  log "ERROR: OpenClaw Gateway did not become ready within timeout"
-  return 1
-}
-
-main() {
-  if is_listening || http_ready; then
-    log "OpenClaw Gateway already running on \${GATEWAY_HOST}:\${GATEWAY_PORT}"
+    log "Gateway already running on port \${PORT}, skipping"
     exit 0
-  fi
+fi
 
-  start_store_app
-  wait_ready
-}
+log "Gateway not running, ensuring monitor and starting store gateway"
 
-main "$@"`}</pre>
+if [ ! -x "$APP_MAIN" ]; then
+    log "ERROR: $APP_MAIN not found or not executable"
+    exit 1
+fi
+if [ ! -x "$OC_BINARY" ]; then
+    log "ERROR: $OC_BINARY not found or not executable"
+    exit 1
+fi
+
+rm -f /tmp/openclaw-*/gateway.*.lock 2>/dev/null || true
+rm -f "$OC_PID_PATH" 2>/dev/null || true
+
+# Do not call cmd/main from ensure. FnOS App Center owns Monitor startup.
+for i in $(seq 1 15); do
+    if pgrep -u "$OC_USER" -f "bun \${TRIM_APPDEST}/server/index.js" >/dev/null 2>&1; then
+        log "Monitor already running as \${OC_USER}"
+        break
+    fi
+    sleep 1
+done
+
+log "Starting Gateway directly as \${OC_USER} on 127.0.0.1:\${PORT}"
+/usr/sbin/runuser -u "$OC_USER" -- /bin/bash -lc "
+    export HOME='\${OC_HOME_DIR}'
+    export OPENCLAW_DATA_DIR='\${OC_DATA_DIR}'
+    export OPENCLAW_CONFIG_PATH='\${OC_CONFIG_PATH}'
+    export OPENCLAW_HIDE_BANNER=1
+    export PATH='\${OC_INSTALL_DIR}/node_modules/.bin:/var/apps/bunjs/target/bin:/var/apps/nodejs_v24/target/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    cd '\${OC_INSTALL_DIR}'
+    exec '\${OC_BINARY}' gateway run --port '\${PORT}' --bind loopback
+" >> "$OC_GATEWAY_LOG" 2>&1 &
+
+for i in $(seq 1 90); do
+    sleep 1
+    if port_listening; then
+        pid=$(find_gateway_pid || true)
+        if [ -n "$pid" ]; then
+            printf "%s" "$pid" > "$OC_PID_PATH"
+            chown "$OC_USER:$OC_USER" "$OC_PID_PATH" 2>/dev/null || true
+            log "Gateway is now running on port \${PORT} (PID \${pid})"
+        else
+            log "Gateway is now running on port \${PORT}"
+        fi
+        exit 0
+    fi
+done
+
+log "ERROR: Gateway still not listening on port \${PORT} after 90s"
+exit 1`}</pre>
 
                     <p>启用：</p>
 
@@ -353,6 +439,14 @@ systemctl daemon-reload
 systemctl enable openclaw-ensure.service
 systemctl start openclaw-ensure.service
 systemctl status openclaw-ensure.service --no-pager`}</pre>
+
+                    <h3>6.3 为什么不能让 ensure 调 cmd/main start</h3>
+                    <p><code>openclaw-ensure.service</code> 是 root 身份运行。若它直接调用 <code>cmd/main start</code>，Monitor 会以 root 身份启动，随后 FnOS App Center 又会以 <code>trim.openclaw</code> 启动正确 Monitor，形成双进程与权限污染。判断是否踩坑：</p>
+
+                    <pre>{`ps -eo pid,ppid,user,group,cmd   | grep "bun /vol1/@appcenter/trim.openclaw/server/index.js"   | grep -v grep
+
+# 正确：只应有 trim.openclaw
+# 错误：出现 root 用户的 Monitor`}</pre>
 
                     <h2>七、权限统一：复刻成功的关键</h2>
                     <p><strong>这是整套方案最容易踩坑、也最必须强调的部分：</strong>商店版 OpenClaw 的运行用户不是 root，而是 FnOS 为商店应用创建的独立用户 <code>trim.openclaw</code>。如果用 root 运行过安装、更新或修复命令，很容易把 <code>node_modules</code>、<code>.openclaw</code>、<code>sessions</code>、<code>runtime</code> 等目录污染成 root 属主，最终导致商店版进程读写失败、更新失败、会话不可写，或者出现“root 版能跑、商店版不能跑”的混乱状态。</p>
@@ -701,7 +795,44 @@ ps -eo pid,ppid,user,group,cmd | grep -E 'trim.openclaw|server/index.js|openclaw
 ss -ltnp | grep 25730
 curl -I http://127.0.0.1:25730/`}</pre>
 
-                    <h2>十三、排错清单</h2>
+                    <h2>十三、完整备份、一键还原与新机复用</h2>
+                    <p>修复完成后，建议立即做一份完整备份。本文环境最终备份位于：</p>
+
+                    <pre>{`/vol2/1000/Backup/OpenClaw/store-openclaw-20260529-215247
+
+openclaw-store-full.tar.zst   # 完整归档，约 464M
+restore-openclaw-store.sh     # 一键恢复/新机复用脚本
+checksums.sha256              # 校验文件
+backup-info.txt               # 备份说明
+manifest.txt                  # 路径清单
+README.md                     # 使用说明`}</pre>
+
+                    <p>latest 指针：</p>
+
+                    <pre>{`/vol2/1000/Backup/OpenClaw/LATEST_STORE.txt
+/vol2/1000/Backup/OpenClaw/restore-latest-openclaw-store.sh`}</pre>
+
+                    <p>恢复最新备份：</p>
+
+                    <pre>{`/vol2/1000/Backup/OpenClaw/restore-latest-openclaw-store.sh`}</pre>
+
+                    <p>无人值守恢复：</p>
+
+                    <pre>{`/vol2/1000/Backup/OpenClaw/restore-latest-openclaw-store.sh --yes`}</pre>
+
+                    <p>备份应至少包含：</p>
+
+                    <pre>{`/var/apps/trim.openclaw/
+/vol1/@appcenter/trim.openclaw/
+/vol1/@apphome/trim.openclaw/
+/vol1/@appdata/trim.openclaw/
+/usr/local/bin/openclaw
+/usr/local/sbin/openclaw-ensure.sh
+/etc/systemd/system/openclaw-ensure.service`}</pre>
+
+                    <p>新机复用时，建议先在 FnOS 商店安装一次 <code>trim.openclaw</code>，确保系统用户、App Center 注册与 nginx/socket 路由存在，再运行恢复脚本。完整运行态备份会包含 sessions、credentials、identity、plugin-state、media/outbound 等数据，适合自用迁移，不适合公开分享。</p>
+
+                    <h2>十四、排错清单</h2>
                     <h3>1. 控制面板能打开，但 Gateway 不在线</h3>
                     <pre>{`systemctl status openclaw-ensure.service --no-pager
 cat /var/log/openclaw-ensure.log
@@ -733,17 +864,19 @@ cwd：/vol1/@apphome/trim.openclaw/data/openclaw
 端口：可能是 18789 或其他
 cwd：通常是 /app 或容器内路径`}</pre>
 
-                    <h2>十四、最终效果</h2>
+                    <h2>十五、最终效果</h2>
                     <p>完成优化后，你会得到一个更稳的商店版 OpenClaw：</p>
 
                     <pre>{`✅ FnOS 商店包负责 UI / Monitor / 生命周期入口
+✅ openclaw-ensure 不再以 root 调用 cmd/main start
 ✅ OpenClaw Gateway 以 trim.openclaw 用户运行
 ✅ Gateway 仅监听 127.0.0.1:25730
-✅ systemd 负责开机后兜底拉起
+✅ systemd 只负责开机后兜底拉起 Gateway
 ✅ 控制面板“检查更新”可升级 openclaw@latest
 ✅ 更新前可检测 FnOS 商店插件版本
 ✅ 更新 OpenClaw 前可先升级渠道插件
 ✅ 更新后自动刷新渠道插件与模型目录
+✅ 完整备份可一键还原或新机复用
 ✅ 整体路径清晰，便于备份、恢复和迁移`}</pre>
 
                     <p>这套方案的关键不是“把 OpenClaw 跑起来”，而是让它符合 FnOS 商店应用的运行范式：程序归 App Center，数据归 @apphome，权限归独立用户，Gateway 不直接暴露，升级逻辑有顺序、有日志、可回滚。这样迁移到另一台设备时，只需按目录、用户、wrapper、systemd、更新逻辑逐项复刻，就能得到一致的运行环境。</p>
