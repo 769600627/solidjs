@@ -11,6 +11,7 @@ import Articles from './pages/Articles';
 import ArticleDualStack from './pages/articles/ArticleDualStack';
 import ArticleHomenetQX from './pages/articles/ArticleHomenetQX';
 import ArticleFnosOpenClawStore from './pages/articles/ArticleFnosOpenClawStore';
+import ArticleFnosIgpuTemp from './pages/articles/ArticleFnosIgpuTemp';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import './css/style.css';
@@ -71,6 +72,12 @@ render(
             <>
               <Title>Kris | 双栈域名体系完全指南</Title>
               <ArticleDualStack />
+            </>
+          )} />
+          <Route path="/article/fnos-igpu-temp" component={() => (
+            <>
+              <Title>Kris | FnOS 核显温度显示补丁：从原理到实现</Title>
+              <ArticleFnosIgpuTemp />
             </>
           )} />
           <Route path="/login" component={() => (
