@@ -90,7 +90,7 @@ cat /proc/cpuinfo | grep "model name" | head -1
 # 检查 lm-sensors 是否安装
 which sensors
 sensors | grep -i "Package id"
-# Package id 0:  +79.0°C  (high = +100.0°C, crit = +100.0°C)</pre>
+# Package id 0:  +79.0°C  (high = +100.0°C, crit = +100.0°C)`}</pre>
 
                     <h3>3.2 确认问题</h3>
                     <p>打开 FnOS Web 面板 → 资源监控 → 查看 GPU 区域。如果核显类型/负载/显存有显示但温度为空白或 0，说明需要打此补丁。</p>
