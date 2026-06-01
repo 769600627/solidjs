@@ -14,7 +14,7 @@ export default function Articles() {
             subtitle: '软件商店安装 · 左侧菜单修复 · PM2 在先 · 更新按钮环境变量 · 控制面板优化',
             date: '2026-06-01',
             tags: ['OpenClaw', 'Baota', 'PM2', 'TencentOS', 'Node.js', '运维'],
-            summary: '宝塔软件商店安装后左侧菜单不显示的修复方法 → 原生 Node 进程管理转 PM2 托管的完整迁移过程 → 更新按钮调用链路与环境变量透传修复 → Telegram 代理配置与重启排查。记录真实踩坑与解决方案。',
+            summary: '先手动安装 PM2 → 后软件商店安装 OpenClaw → 插件入口在软件商店区（无左侧菜单）→ 更新按钮调用链路与环境变量透传修复 → Telegram 代理配置。记录真实部署顺序与踩坑。',
             slug: 'openclaw-baota-pm2'
         },
         {
