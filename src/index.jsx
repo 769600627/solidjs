@@ -60,7 +60,7 @@ render(
           )} />
           <Route path="/article/openclaw-baota-pm2" component={() => (
             <>
-              <Title>Kris | 宝塔面板 OpenClaw PM2 托管与运维</Title>
+              <Title>Kris | 宝塔插件 OpenClaw 安装配置与运维</Title>
               <ArticleOpenClawBaotaPm2 />
             </>
           )} />
