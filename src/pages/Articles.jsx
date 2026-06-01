@@ -10,11 +10,11 @@ export default function Articles() {
 
     const articles = [
         {
-            title: '宝塔面板 OpenClaw 从安装到生产：PM2 托管、更新修复与环境变量优化',
-            subtitle: 'npm 安装 · PM2 进程守护 · 更新按钮环境修复 · 控制面板优化 · 完整运维方案',
+            title: '宝塔插件 OpenClaw 完全指南：安装配置、环境变量优化与 PM2 进程管理',
+            subtitle: '宝塔软件商店 · 插件面板管理 · 环境变量透传 · PM2 底层运维 · 更新按钮修复',
             date: '2026-06-01',
             tags: ['OpenClaw', 'Baota', 'PM2', 'TencentOS', 'Node.js', '运维'],
-            summary: '宝塔面板 + npm 全局安装 OpenClaw → PM2 统一进程管理 → 更新按钮失效根因分析与环境变量修复 → 控制面板域名绑定与安全加固 → 完整运维命令汇总。适用于国内服务器生产环境。',
+            summary: '宝塔软件商店一键安装 OpenClaw 插件 → 内置 Vue 控制面板 → 更新按钮底层调用链路与 env 初始化修复 → PM2 进程管理与重启策略 → Telegram 代理配置。完整记录从安装到生产运维。',
             slug: 'openclaw-baota-pm2'
         },
         {
