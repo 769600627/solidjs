@@ -10,12 +10,6 @@ export default function Articles() {
 
     const articles = [
         {
-            title: '宝塔插件 OpenClaw 部署实录：从左侧菜单修复到 PM2 在先与环境变量优化',
-            subtitle: '软件商店安装 · 左侧菜单修复 · PM2 在先 · 更新按钮环境变量 · 控制面板优化',
-            date: '2026-06-01',
-            tags: ['OpenClaw', 'Baota', 'PM2', 'TencentOS', 'Node.js', '运维'],
-            summary: '实际从已手动安装的 PM2 到宝塔软件商店安装 OpenClaw 插件的部署记录 → 插件面板功能总览（根据本机 API 接口确认）→ 更新按钮调用链路与环境变量透传修复 → Telegram 代理配置 → PM2 重启计数过高的排查思路。',
-            slug: 'openclaw-baota-pm2'
         },
         {
             title: 'OpenClaw 记忆优化实战：Ollama Embedding + memory-core 本地化部署',
