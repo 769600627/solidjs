@@ -10,8 +10,6 @@ export default function Articles() {
 
     const articles = [
         {
-        },
-        {
             title: 'OpenClaw 记忆优化实战：Ollama Embedding + memory-core 本地化部署',
             subtitle: 'Nomic Embed Text · FnOS Ollama 容器 · 多 OpenClaw 实例 provider 统一管理 · memory-core 语义搜索恢复',
             date: '2026-06-01',
