@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeltrivX</title>
-  <style>
-    body { background: #0a0e17; color: #c8d6e5; font-family: 'JetBrains Mono', monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; text-align: center; }
-    h1 { color: #ff2d78; text-shadow: 0 0 20px #ff2d78; font-size: 2.5rem; }
-    p { color: #00d4ff; margin-top: 1rem; }
-  </style>
-  <script>
-    sessionStorage.redirect = location.pathname + location.search + location.hash;
-  </script>
-  <meta http-equiv="refresh" content="0;URL='/'" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 信号丢失 | DeltrivX</title>
+    <meta http-equiv="refresh" content="0; url=/">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--darker-bg);
+            text-align: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        h1 {
+            font-size: 6rem;
+            color: var(--neon-pink);
+            text-shadow: 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
+        }
+        p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+        a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+        a:hover {
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+    </style>
 </head>
 <body>
-  <h1>DELTRIVX</h1>
-  <p>// 正在加载赛博空间...</p>
+    <h1>404</h1>
+    <p>信号丢失 · 页面未找到</p>
+    <a href="/">← 返回首页</a>
+    <script>location.replace('/');</script>
 </body>
 </html>

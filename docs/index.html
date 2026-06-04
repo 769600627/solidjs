@@ -1,25 +1,309 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <!-- 页面元数据和 SEO 配置 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeltrivX | 个人主页</title>
+    <title>DeltrivX | 赛博空间</title>
     <meta name="description" content="DeltrivX - 全栈开发者、AI探索者、开源贡献者">
-    <meta property="og:title" content="DeltrivX | 个人主页">
+    <meta property="og:title" content="DeltrivX | 赛博空间">
     <meta property="og:description" content="DeltrivX - 全栈开发者、AI探索者、开源贡献者">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.deltrivx.com">
     <meta property="og:locale" content="zh_CN">
-    <meta name="view-transition" content="same-origin">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-  <script type="module" crossorigin src="./assets/index-CmbtTaU_.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CnUIzLYs.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- SolidJS 挂载点 -->
-    <div id="root"></div>
-    
-    <!-- 引入 SolidJS 入口文件 -->
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">DELTRIV<span class="neon-text">X</span></span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">ABOUT</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#skills" class="nav-link">SKILLS</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#projects" class="nav-link">PROJECTS</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">CONTACT</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="grid-overlay"></div>
+            <div class="scan-lines"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="glitch" data-text="DELTRIVX">DELTRIVX</span>
+                    <span class="hero-subtitle">全栈开发者 · AI探索者 · 开源贡献者</span>
+                </h1>
+                <p class="hero-description">
+                    穿越数字与现实的边界，构建未来基础设施。从云原生架构到边缘计算，从 AI 模型部署到安全审计——在这里，技术不止于工具，更是艺术。
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects"><button class="btn btn-primary">探索作品</button></a>
+                    <a href="#about"><button class="btn btn-secondary">了解我</button></a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="cyber-circle">
+                    <div class="circle-ring"></div>
+                    <div class="circle-ring"></div>
+                    <div class="circle-ring"></div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">关于 <span class="neon-text">我</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>数字世界的建筑师</h3>
+                    <p>我是 DeltrivX，一名全栈开发者与 AI 探索者。热衷于构建高性能、可扩展的现代应用，从底层网络架构到前端交互体验，追求每一行的优雅与效率。</p>
+                    <p>在 Cloudflare Tunnel、FnOS、Linux 服务器、Docker 容器编排等领域有丰富实战经验；熟悉模型部署、向量数据库、RAG 等 AI 技术栈。开源信奉者，代码即作品。</p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-number">10+</span>
+                            <span class="stat-label">开源项目</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">23</span>
+                            <span class="stat-label">托管域名</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">可能性</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <div class="tech-grid">
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                        <div class="grid-item"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">技术 <span class="neon-text">栈</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>全栈开发</h3>
+                    <p>SolidJS / React / Vue 前端，Node.js / Python 后端。从 SPA 到微服务架构，构建高效可靠的现代应用。</p>
+                    <div class="service-glow"></div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI / 机器学习</h3>
+                    <p>模型部署与推理、向量数据库（Chroma/Qdrant）、RAG 应用、Embeddings API。将 AI 落地到实际场景。</p>
+                    <div class="service-glow"></div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>云原生 / 网络</h3>
+                    <p>Cloudflare Tunnel & DNS、Docker 编排、CDN 加速、TLS 证书管理、双栈域名体系。构建稳固的网络基础设施。</p>
+                    <div class="service-glow"></div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>安全审计</h3>
+                    <p>GitHub 安全审计、服务器加固、Firewall 策略、加密方案。始终在攻防思考的前沿。</p>
+                    <div class="service-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">项目 <span class="neon-text">集</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-image" style="background: linear-gradient(45deg, #00ffff, #ff006e);">
+                        <div class="image-placeholder"><i class="fas fa-globe"></i></div>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>DeltrivX Blog</h3>
+                        <p>赛博朋克风格个人博客 · SolidJS + GitHub Pages + Cloudflare Tunnel</p>
+                        <a href="https://github.com/deltrivx/solidjs" target="_blank"><button class="btn btn-small">VIEW PROJECT</button></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-image" style="background: linear-gradient(45deg, #9d00ff, #00ffff);">
+                        <div class="image-placeholder"><i class="fas fa-database"></i></div>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Local Embeddings API</h3>
+                        <p>本地 Embeddings 推理服务 · OpenAI 兼容 · Ollama + Chroma</p>
+                        <a href="https://github.com/deltrivx/local-embeddings-api" target="_blank"><button class="btn btn-small">VIEW PROJECT</button></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-image" style="background: linear-gradient(45deg, #ff006e, #ffff00);">
+                        <div class="image-placeholder"><i class="fas fa-server"></i></div>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Sub2API Skills</h3>
+                        <p>Sub-Store API 管理工具体系 · 账号/分组/令牌/余额</p>
+                        <a href="https://github.com/deltrivx/sub2api-skills" target="_blank"><button class="btn btn-small">VIEW PROJECT</button></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-image" style="background: linear-gradient(45deg, #00ff88, #00ffff);">
+                        <div class="image-placeholder"><i class="fas fa-film"></i></div>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>KVideo</h3>
+                        <p>现代化视频聚合播放平台 · Liquid Glass 设计语言 · Next.js 16</p>
+                        <a href="https://github.com/deltrivx/KVideo" target="_blank"><button class="btn btn-small">VIEW PROJECT</button></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-image" style="background: linear-gradient(45deg, #ff8800, #ff006e);">
+                        <div class="image-placeholder"><i class="fas fa-tv"></i></div>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>dongguaTV</h3>
+                        <p>电视直播源与播放方案整合 · IPTV 生态</p>
+                        <a href="https://github.com/deltrivx/dongguaTV" target="_blank"><button class="btn btn-small">VIEW PROJECT</button></a>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-image" style="background: linear-gradient(45deg, #00ffff, #9d00ff);">
+                        <div class="image-placeholder"><i class="fas fa-exchange-alt"></i></div>
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Quantumult-X</h3>
+                        <p>自用代理规则脚本整合 · QX 生态工具</p>
+                        <a href="https://github.com/deltrivx/Quantumult-X" target="_blank"><button class="btn btn-small">VIEW PROJECT</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">联系 <span class="neon-text">我</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>deltrivx@icloud.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-github"></i>
+                        <span>github.com/deltrivx</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>中国 · 赛博空间</span>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="你的名字" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="你的邮箱" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="你的留言" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">发送消息</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">DELTRIV<span class="neon-text">X</span></span>
+                </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/deltrivx" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://twitter.com/deltrivx" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="mailto:deltrivx@icloud.com"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 DELTRIVX. Built on the digital frontier.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
