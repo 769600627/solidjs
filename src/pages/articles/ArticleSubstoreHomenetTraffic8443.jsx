@@ -124,10 +124,10 @@ function addTraffic(upload, download) {
 
 function userinfoHeader(data) {
   return [
-    `upload=${data.upload}`,
-    `download=${data.download}`,
-    `total=${data.total}`,
-    `expire=${data.expire}`,
+    "upload=" + data.upload,
+    "download=" + data.download,
+    "total=" + data.total,
+    "expire=" + data.expire,
   ].join("; ");
 }
 
@@ -144,10 +144,10 @@ app.get("/homenet-userinfo", (req, res) => {
 });
 
 app.get("/qx", (req, res) => {
-  const subscription = `
-shadowsocks=home.example.com:18443,method=chacha20-ietf-poly1305,password=your_password,obfs=wss,obfs-host=home.example.com,obfs-uri=/ss-direct,fast-open=true,udp-relay=false,tag=HomeNet-Fast
-shadowsocks=substore.example.com:8443,method=chacha20-ietf-poly1305,password=your_password,obfs=wss,obfs-host=substore.example.com,obfs-uri=/ss-direct,fast-open=true,udp-relay=false,tls-verification=false,server_check_url=http://connectivitycheck.gstatic.com/generate_204,tag=HomeNet-CF
-`.trim();
+  const subscription = [
+    "shadowsocks=home.example.com:18443,method=chacha20-ietf-poly1305,password=your_password,obfs=wss,obfs-host=home.example.com,obfs-uri=/ss-direct,fast-open=true,udp-relay=false,tag=HomeNet-Fast",
+    "shadowsocks=substore.example.com:8443,method=chacha20-ietf-poly1305,password=your_password,obfs=wss,obfs-host=substore.example.com,obfs-uri=/ss-direct,fast-open=true,udp-relay=false,tls-verification=false,server_check_url=http://connectivitycheck.gstatic.com/generate_204,tag=HomeNet-CF",
+  ].join("\n");
 
   const data = addTraffic(0, Buffer.byteLength(subscription));
   res.setHeader("subscription-userinfo", userinfoHeader(data));
