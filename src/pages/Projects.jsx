@@ -31,14 +31,7 @@ export default function Projects() {
             tech: ["FnOS", "影视"],
             links: [{ url: "https://fntv.deltrivx.com", label: "🌐 公网" }, { url: "http://192.168.31.2:8005", label: "🔗 内网" }],
         },
-        {
-            // === 新增 Sub2API 项目卡片 ===
-            icon: "🌀",
-            name: "Sub2API",
-            desc: "AI API 网关平台，支持订阅转换与多模型路由。",
-            tech: ["API", "AI", "Gateway"],
-            links: [{ url: "https://sub2api.deltrivx.com", label: "🌐 公网" }, { url: "http://192.168.31.2:8008", label: "🔗 内网" }],
-        },
+
         {
             icon: "🔗",
             name: "SubStore",
@@ -153,6 +146,13 @@ export default function Projects() {
             links: [{ url: "https://migu.deltrivx.com", label: "🌐 公网" }, { url: "http://192.168.31.2:1234", label: "🔗 内网" }],
         },
         // ===== 仅内网 =====
+        {
+            icon: "ð",
+            name: "Sub2API",
+            desc: "AI API 网关平台，支持订阅转换与多模型路由。",
+            tech: ["API", "AI", "Gateway"],
+            links: [{ url: "http://192.168.31.2:8008", label: "🔗 内网" }],
+        },
         {
             icon: "📺",
             name: "MDC 媒体下载中心",
