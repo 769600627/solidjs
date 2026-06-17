@@ -54,27 +54,7 @@ export default function Projects() {
             tech: ["Chromium", "浏览器"],
             links: [{ url: "https://chromium.deltrivx.com", label: "🌐 公网" }, { url: "https://192.168.31.2:3011", label: "🔗 内网" }],
         },
-        {
-            icon: "🐻",
-            name: "Aria2",
-            desc: "轻量级命令行下载工具，支持 HTTP/HTTPS/BT/Metalink 协议，搭配 AriaNg WebUI 管理。",
-            tech: ["aria2", "下载"],
-            links: [{ url: "http://192.168.31.2:6880", label: "🔗 内网" }],
-        },
-        {
-            icon: "⚡",
-            name: "qBittorrent",
-            desc: "轻量级 BT/PT 下载客户端，功能完善，支持 WebUI 远程管理。",
-            tech: ["qBittorrent", "BT/PT"],
-            links: [{ url: "http://192.168.31.2:8080", label: "🔗 内网" }],
-        },
-        {
-            icon: "📡",
-            name: "Transmission",
-            desc: "轻量 BT 下载客户端，资源占用低，适合 7x24 运行。",
-            tech: ["Transmission", "BT"],
-            links: [{ url: "http://192.168.31.2:9091", label: "🔗 内网" }],
-        },
+
         {
             icon: "🎛️",
             name: "Emby 影音中心",
@@ -124,13 +104,7 @@ export default function Projects() {
             tech: ["文件管理", "分享"],
             links: [{ url: "https://openlist.deltrivx.com", label: "🌐 公网" }, { url: "http://192.168.31.2:5244", label: "🔗 内网" }],
         },
-        {
-            icon: "🐧",
-            name: "Xunlei 迅雷远程",
-            desc: "远程迅雷下载服务，支持磁力链接与 BT 下载。",
-            tech: ["下载", "P2P"],
-            links: [{ url: "http://192.168.31.2:2345", label: "🔗 内网" }],
-        },
+
         {
             icon: "🔗",
             name: "OmniBox 综合工具",
@@ -153,34 +127,8 @@ export default function Projects() {
             tech: ["API", "AI", "Gateway"],
             links: [{ url: "http://192.168.31.2:8008", label: "🔗 内网" }],
         },
-        {
-            icon: "🐻",
-            name: "Aria2",
-            desc: "轻量级命令行下载工具，支持 HTTP/HTTPS/BT/Metalink 协议，搭配 AriaNg WebUI 管理。",
-            tech: ["aria2", "下载"],
-            links: [{ url: "http://192.168.31.2:6880", label: "🔗 内网" }],
-        },
-        {
-            icon: "⚡",
-            name: "qBittorrent",
-            desc: "轻量级 BT/PT 下载客户端，功能完善，支持 WebUI 远程管理。",
-            tech: ["qBittorrent", "BT/PT"],
-            links: [{ url: "http://192.168.31.2:8080", label: "🔗 内网" }],
-        },
-        {
-            icon: "📡",
-            name: "Transmission",
-            desc: "轻量 BT 下载客户端，资源占用低，适合 7x24 运行。",
-            tech: ["Transmission", "BT"],
-            links: [{ url: "http://192.168.31.2:9091", label: "🔗 内网" }],
-        },
-        {
-            icon: "🐧",
-            name: "Xunlei 迅雷远程",
-            desc: "远程迅雷下载服务，支持磁力链接与 BT 下载。",
-            tech: ["下载", "P2P"],
-            links: [{ url: "http://192.168.31.2:2345", label: "🔗 内网" }],
-        },
+
+
         {
             icon: "📺",
             name: "MDC 媒体下载中心",
