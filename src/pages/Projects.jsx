@@ -76,13 +76,7 @@ export default function Projects() {
             tech: ["搜索", "网盘"],
             links: [{ url: "https://pansou.deltrivx.com", label: "🌐 公网" }, { url: "http://192.168.31.2:3080", label: "🔗 内网" }],
         },
-        {
-            icon: "📥",
-            name: "Telegram 下载器",
-            desc: "自动抓取 Telegram 频道的媒体文件并下载到本地存储。",
-            tech: ["Telegram API", "自动化"],
-            links: [{ url: "https://telegram.deltrivx.com", label: "🌐 公网" }, { url: "http://192.168.31.2:5000", label: "🔗 内网" }],
-        },
+
         {
             icon: "📊",
             name: "Portainer 容器管理",
@@ -154,6 +148,13 @@ export default function Projects() {
             desc: "远程迅雷下载服务，支持磁力链接与 BT 下载。",
             tech: ["下载", "P2P"],
             links: [{ url: "http://192.168.31.2:2345", label: "🔗 内网" }],
+        },
+        {
+            icon: "📥",
+            name: "Telegram 下载器",
+            desc: "自动抓取 Telegram 频道的媒体文件并下载到本地存储。",
+            tech: ["Telegram API", "自动化"],
+            links: [{ url: "http://192.168.31.2:5000", label: "🔗 内网" }],
         },
 
 
