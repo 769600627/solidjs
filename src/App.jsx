@@ -1,32 +1,21 @@
-import { onMount, onCleanup } from 'solid-js';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Particles from './components/Particles';
+import { onMount, onCleanup } from "solid-js";
+import Particles from "./components/Particles";
 
 export default function App(props) {
-  let spotlightRef;
-
   onMount(() => {
     const handleMouseMove = (e) => {
-      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+      document.documentElement.style.setProperty("--mouse-x", e.clientX + "px");
+      document.documentElement.style.setProperty("--mouse-y", e.clientY + "px");
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    onCleanup(() => window.removeEventListener('mousemove', handleMouseMove));
+    window.addEventListener("mousemove", handleMouseMove);
+    onCleanup(() => window.removeEventListener("mousemove", handleMouseMove));
   });
 
   return (
     <>
-      {/* 鼠标聚光灯层 */}
-      <div class="spotlight" ref={spotlightRef}></div>
-      {/* 全局粒子背景 */}
+      <div class="spotlight"></div>
       <Particles />
-      {/* 顶部导航 */}
-      <Navbar />
-      <main>
-        {props.children}
-      </main>
-      <Footer />
+      <main>{props.children}</main>
     </>
   );
 }
