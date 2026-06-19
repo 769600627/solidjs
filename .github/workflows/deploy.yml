@@ -25,7 +25,7 @@ jobs:
         run: npm run build
 
       - name: Copy CNAME to docs/
-        run: echo "www.deltrivx.com" > docs/CNAME
+        run: echo "www.769600627.xyz" > docs/CNAME
 
       - name: Commit built docs/ to main branch
         run: |
