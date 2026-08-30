@@ -15,7 +15,7 @@ export default function Home() {
       "全栈开发者 🚀",
       "AI 探索者 🤖",
       "开源贡献者 💡",
-      "终身学习者 📚"
+      "终身学习者 📚",
     ];
     let phraseIndex = 0;
     let charIndex = 0;
@@ -62,20 +62,14 @@ export default function Home() {
       link: "/about",
     },
     {
-      icon: "⚡",
-      title: "技能栈",
-      desc: "前端、后端、DevOps、AI 与媒体架构能力",
-      link: "/skills",
-    },
-    {
       icon: "🚀",
-      title: "精选项目",
-      desc: "飞牛私有云、Emby、HomeAssistant 与自建服务",
+      title: "精选项目 & 自建服务",
+      desc: "飞牛私有云、Emby、HomeAssistant 与自建服务矩阵",
       link: "/projects",
     },
     {
       icon: "📝",
-      title: "技术实战",
+      title: "技术实战专栏",
       desc: "FnOS、Docker 容器编排、双栈网络与系统优化文章",
       link: "/articles",
     },
@@ -111,9 +105,9 @@ export default function Home() {
           <h2>
             <span class="gradient-text">探索更多</span>
           </h2>
-          <p>了解我的技能体系、自建服务矩阵与实战文章</p>
+          <p>了解我的自建服务矩阵与技术实战文章</p>
         </div>
-        <div class="nav-cards-grid">
+        <div class="nav-cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
           {navCards.map((card) => (
             <A href={card.link} class="nav-card reveal tilt-card">
               <span class="nav-card-icon">{card.icon}</span>

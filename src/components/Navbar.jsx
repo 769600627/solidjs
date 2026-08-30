@@ -23,11 +23,6 @@ export default function Navbar() {
           </A>
         </li>
         <li>
-          <A href="/skills" class={location.pathname === "/skills" ? "active" : ""}>
-            技能
-          </A>
-        </li>
-        <li>
           <A href="/projects" class={location.pathname === "/projects" ? "active" : ""}>
             项目
           </A>

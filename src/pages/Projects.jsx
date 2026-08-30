@@ -1,5 +1,5 @@
 import { createSignal, onMount } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { A, useNavigate } from "@solidjs/router";
 import { useAuth } from "../context/AuthContext";
 import { initReveal, initTilt } from "../utils/animations";
 
@@ -159,13 +159,6 @@ export default function Projects() {
     initTilt();
   });
 
-  const handleLinkClick = (e, url, isInternal = false) => {
-    if (isInternal && !isLoggedIn()) {
-      e.preventDefault();
-      navigate(`/login?redirect=${encodeURIComponent(url)}`);
-    }
-  };
-
   const filteredProjects = () => {
     if (activeCategory() === "all") return projectsData;
     return projectsData.filter((p) => p.category === activeCategory());
@@ -207,24 +200,34 @@ export default function Projects() {
                 ))}
               </div>
               <div class="project-links">
-                <a
-                  href={p.publicUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="project-link-btn"
-                  onClick={(e) => handleLinkClick(e, p.publicUrl, false)}
-                >
-                  🌐 公网访问
-                </a>
-                <a
-                  href={p.internalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="project-link-btn internal"
-                  onClick={(e) => handleLinkClick(e, p.internalUrl, true)}
-                >
-                  {isLoggedIn() ? "🔗 内网直达" : "🔒 内网 (需解锁)"}
-                </a>
+                {isLoggedIn() ? (
+                  <>
+                    <a
+                      href={p.publicUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="project-link-btn"
+                    >
+                      🌐 公网访问
+                    </a>
+                    <a
+                      href={p.internalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="project-link-btn internal"
+                    >
+                      🔗 内网直达
+                    </a>
+                  </>
+                ) : (
+                  <A
+                    href="/login"
+                    class="project-link-btn"
+                    style="width: 100%; justify-content: center; background: rgba(108, 92, 231, 0.15); border-color: rgba(108, 92, 231, 0.35); color: var(--accent-2);"
+                  >
+                    🔒 解锁后显示访问链接
+                  </A>
+                )}
               </div>
             </div>
           </div>

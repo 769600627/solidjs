@@ -4,7 +4,6 @@ import { MetaProvider, Title, Meta } from "@solidjs/meta";
 import App from "./App";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Skills from "./pages/Skills";
 import Projects from "./pages/Projects";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
@@ -38,19 +37,6 @@ render(
                 content="了解 Mohican 的自建经历、家庭数据中心与技术栈"
               />
               <About />
-            </>
-          )}
-        />
-        <Route
-          path="/skills"
-          component={() => (
-            <>
-              <Title>Mohican | 技能栈</Title>
-              <Meta
-                name="description"
-                content="Mohican 掌握的技术能力与架构栈"
-              />
-              <Skills />
             </>
           )}
         />

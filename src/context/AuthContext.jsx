@@ -8,16 +8,15 @@ export function AuthProvider(props) {
 
   onMount(() => {
     const saved = localStorage.getItem("mohican_auth");
-    if (saved === "true") {
+    if (saved === "Ww1433223@_unlocked") {
       setIsLoggedIn(true);
     }
   });
 
   const login = (password) => {
-    // 默认允许输入密码解锁访问
-    if (password && password.trim().length > 0) {
+    if (password === "Ww1433223@") {
       setIsLoggedIn(true);
-      localStorage.setItem("mohican_auth", "true");
+      localStorage.setItem("mohican_auth", "Ww1433223@_unlocked");
       return true;
     }
     return false;
