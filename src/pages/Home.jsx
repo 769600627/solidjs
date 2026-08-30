@@ -1,67 +1,128 @@
 import { onMount, onCleanup } from "solid-js";
+import { A } from "@solidjs/router";
+import { initReveal, initTilt } from "../utils/animations";
 
 export default function Home() {
   let typewriterEl;
   let timer;
 
   onMount(() => {
-    const phrases = ["开发者 🚀", "折腾爱好者 ⚡", "开源贡献者 💡", "自建派 🏠"];
-    let phraseIndex = 0, charIndex = 0, isDeleting = false;
+    initReveal();
+    initTilt();
+
+    const phrases = [
+      "折腾党 & 自建派 🏠",
+      "全栈开发者 🚀",
+      "AI 探索者 🤖",
+      "开源贡献者 💡",
+      "终身学习者 📚"
+    ];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
 
     function typeWriter() {
+      if (!typewriterEl) return;
       const currentPhrase = phrases[phraseIndex];
       if (isDeleting) {
-        typewriterEl.innerHTML = currentPhrase.substring(0, charIndex - 1) + '<span class="cursor"></span>';
+        typewriterEl.innerHTML =
+          currentPhrase.substring(0, charIndex - 1) +
+          '<span class="cursor"></span>';
         charIndex--;
       } else {
-        typewriterEl.innerHTML = currentPhrase.substring(0, charIndex + 1) + '<span class="cursor"></span>';
+        typewriterEl.innerHTML =
+          currentPhrase.substring(0, charIndex + 1) +
+          '<span class="cursor"></span>';
         charIndex++;
       }
+
       let speed = isDeleting ? 40 : 80;
-      if (!isDeleting && charIndex === currentPhrase.length) { speed = 2000; isDeleting = true; }
-      else if (isDeleting && charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; speed = 500; }
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        speed = 2000;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        speed = 500;
+      }
       timer = setTimeout(typeWriter, speed);
     }
     typeWriter();
   });
 
-  onCleanup(() => clearTimeout(timer));
+  onCleanup(() => {
+    if (timer) clearTimeout(timer);
+  });
 
-  const links = [
-    { icon: "🐙", title: "GitHub", desc: "我的开源项目", url: "https://github.com/769600627" },
-    { icon: "🐦", title: "Twitter / X", desc: "日常动态", url: "https://x.com/769600627" },
-    { icon: "📧", title: "Email", desc: "联系我", url: "mailto:769600627@example.com" },
-    { icon: "📝", title: "博客", desc: "技术文章与思考", url: "https://www.769600627.xyz" },
+  const navCards = [
+    {
+      icon: "👨‍💻",
+      title: "关于我",
+      desc: "了解我的背景、折腾经历与家庭数据中心",
+      link: "/about",
+    },
+    {
+      icon: "⚡",
+      title: "技能栈",
+      desc: "前端、后端、DevOps、AI 与媒体架构能力",
+      link: "/skills",
+    },
+    {
+      icon: "🚀",
+      title: "精选项目",
+      desc: "飞牛私有云、Emby、HomeAssistant 与自建服务",
+      link: "/projects",
+    },
+    {
+      icon: "📝",
+      title: "技术实战",
+      desc: "FnOS、Docker 容器编排、双栈网络与系统优化文章",
+      link: "/articles",
+    },
   ];
 
   return (
     <>
-      <section class="hero" style="min-height: 100vh;">
+      <section class="hero">
         <div class="hero-content">
-          <span class="hero-badge">{'👋'} 欢迎来到我的链接页</span>
+          <span class="hero-badge">👋 欢迎来到我的个人主页</span>
           <h1>
-            <span class="gradient-text">769600627</span>
+            <span class="gradient-text">Mohican</span>
           </h1>
-          <div class="typewriter" ref={typewriterEl}></div>
-          <div class="link-grid">
-            {links.map((link) => (
-              <a href={link.url} target="_blank" rel="noopener noreferrer" class="link-card">
-                <span class="link-card-icon">{link.icon}</span>
-                <div class="link-card-text">
-                  <strong>{link.title}</strong>
-                  <span>{link.desc}</span>
-                </div>
-                <span class="link-card-arrow">{'→'}</span>
-              </a>
-            ))}
+          <div class="typewriter" ref={typewriterEl}>
+            <span class="cursor"></span>
+          </div>
+          <div class="hero-buttons">
+            <A href="/projects" class="btn btn-primary">
+              🚀 探索项目
+            </A>
+            <A href="/about" class="btn btn-outline">
+              👨‍💻 关于我
+            </A>
           </div>
         </div>
-        <div class="scroll-indicator"><span></span></div>
+        <div class="scroll-indicator">
+          <span></span>
+        </div>
       </section>
 
-      <footer style="position: relative; z-index: 1; text-align: center; padding: 2rem; border-top: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 0.85rem;">
-        <p>{'©'} {new Date().getFullYear()} 769600627. Made with {'❤'}</p>
-      </footer>
+      <section class="explore-section">
+        <div class="section-header reveal">
+          <h2>
+            <span class="gradient-text">探索更多</span>
+          </h2>
+          <p>了解我的技能体系、自建服务矩阵与实战文章</p>
+        </div>
+        <div class="nav-cards-grid">
+          {navCards.map((card) => (
+            <A href={card.link} class="nav-card reveal tilt-card">
+              <span class="nav-card-icon">{card.icon}</span>
+              <h3>{card.title}</h3>
+              <p>{card.desc}</p>
+            </A>
+          ))}
+        </div>
+      </section>
     </>
   );
 }

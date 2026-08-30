@@ -1,0 +1,235 @@
+import { createSignal, onMount } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+import { useAuth } from "../context/AuthContext";
+import { initReveal, initTilt } from "../utils/animations";
+
+export default function Projects() {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = createSignal("all");
+
+  const projectsData = [
+    {
+      icon: "🐮",
+      name: "飞牛私有云 (FnOS)",
+      desc: "家庭私有云存储、备份、相册与系统管理中枢，承载全部微服务体系。",
+      category: "homelab",
+      tech: ["FnOS", "NAS", "私有云"],
+      publicUrl: "https://nas.769600627.xyz",
+      internalUrl: "http://192.168.2.188:5666",
+    },
+    {
+      icon: "🎬",
+      name: "Emby 媒体中心",
+      desc: "4K HDR 影视私人影院，全端自动刮削海报墙与硬件解码流媒体。",
+      category: "media",
+      tech: ["Emby", "影视", "流媒体"],
+      publicUrl: "https://emby.769600627.xyz",
+      internalUrl: "http://192.168.2.188:8096",
+    },
+    {
+      icon: "🤖",
+      name: "OpenClaw AI 平台",
+      desc: "大模型智能体（Agent）平台与工作流自动化调度中心。",
+      category: "ai",
+      tech: ["OpenClaw", "AI", "Agent"],
+      publicUrl: "https://openclaw.769600627.xyz",
+      internalUrl: "http://192.168.2.188:8088",
+    },
+    {
+      icon: "🍿",
+      name: "MoviePilot 观影自动化",
+      desc: "全自动影视识别抓取、洗版追剧、BrushFlow 刷流与 Emby 自动整理入库。",
+      category: "media",
+      tech: ["MoviePilot", "PT", "自动化"],
+      publicUrl: "https://mp.769600627.xyz",
+      internalUrl: "http://192.168.2.188:3000",
+    },
+    {
+      icon: "🏠",
+      name: "HomeAssistant 智能家居",
+      desc: "全屋智能控制中枢，集成灯光、传感器、家电与自动化联动场景。",
+      category: "homelab",
+      tech: ["HomeAssistant", "IoT", "智能家居"],
+      publicUrl: "https://ha.769600627.xyz",
+      internalUrl: "http://192.168.2.188:8123",
+    },
+    {
+      icon: "🧩",
+      name: "SubStore 订阅转换",
+      desc: "高级订阅管理、协议转换与节点规则自动化处理工具。",
+      category: "tools",
+      tech: ["SubStore", "网络", "规则"],
+      publicUrl: "https://substore.769600627.xyz",
+      internalUrl: "http://192.168.2.188:3301",
+    },
+    {
+      icon: "📥",
+      name: "Transmission 下载器",
+      desc: "高性能 PT 做种保种客户端，深度整合 BrushFlow 差异化刷流策略。",
+      category: "media",
+      tech: ["Transmission", "PT", "下载"],
+      publicUrl: "https://tr.769600627.xyz",
+      internalUrl: "http://192.168.2.188:9091",
+    },
+    {
+      icon: "⚡",
+      name: "qBittorrent 下载器",
+      desc: "多功能种子下载器，支持多站点任务管理与高速下载队列。",
+      category: "media",
+      tech: ["qBittorrent", "BT/PT", "下载"],
+      publicUrl: "https://qb.769600627.xyz",
+      internalUrl: "http://192.168.2.188:8080",
+    },
+    {
+      icon: "🐉",
+      name: "青龙面板 (Qinglong)",
+      desc: "支持 Python / Node.js 的自动化定时任务与脚本管理系统。",
+      category: "tools",
+      tech: ["Qinglong", "自动化", "定时任务"],
+      publicUrl: "https://ql.769600627.xyz",
+      internalUrl: "http://192.168.2.188:15700",
+    },
+    {
+      icon: "🧭",
+      name: "Sun-Panel 导航看板",
+      desc: "极简自建服务统一入口看板，轻松掌握所有家庭服务的运行状态。",
+      category: "tools",
+      tech: ["Sun-Panel", "Dashboard", "导航"],
+      publicUrl: "https://nav.769600627.xyz",
+      internalUrl: "http://192.168.2.188:3002",
+    },
+    {
+      icon: "🎵",
+      name: "ByteMuse 音乐服务",
+      desc: "私人高保真云端音乐与有声读物流媒体播放服务。",
+      category: "media",
+      tech: ["ByteMuse", "音乐", "流媒体"],
+      publicUrl: "https://music.769600627.xyz",
+      internalUrl: "http://192.168.2.188:8043",
+    },
+    {
+      icon: "💬",
+      name: "VoceChat 私有即时通讯",
+      desc: "轻量安全、支持端对端通信的自托管聊天室与通知系统。",
+      category: "homelab",
+      tech: ["VoceChat", "IM", "私有通讯"],
+      publicUrl: "https://chat.769600627.xyz",
+      internalUrl: "http://192.168.2.188:3111",
+    },
+    {
+      icon: "🛠️",
+      name: "IT-Tools 开发者工具箱",
+      desc: "开发者必备工具集合（编解码、JWT 调试、JSON 格式化、网络测试）。",
+      category: "tools",
+      tech: ["IT-Tools", "开发工具", "工具箱"],
+      publicUrl: "https://tools.769600627.xyz",
+      internalUrl: "http://192.168.2.188:8011",
+    },
+    {
+      icon: "🌐",
+      name: "AriaNg 下载管理",
+      desc: "现代化 Aria2 Web 前端，支持全格式多线程高速下载管理。",
+      category: "tools",
+      tech: ["Aria2", "AriaNg", "下载"],
+      publicUrl: "https://ariang.769600627.xyz",
+      internalUrl: "http://192.168.2.188:6880",
+    },
+    {
+      icon: "🧠",
+      name: "Grok2API / CliproxyAPI",
+      desc: "大语言模型 API 反向代理网关与格式统一转换接口。",
+      category: "ai",
+      tech: ["API网关", "LLM", "代理"],
+      publicUrl: "https://api.769600627.xyz",
+      internalUrl: "http://192.168.2.188:8000",
+    },
+  ];
+
+  const categories = [
+    { key: "all", name: "全部服务" },
+    { key: "homelab", name: "自建系统" },
+    { key: "media", name: "影视媒体" },
+    { key: "ai", name: "AI 智能" },
+    { key: "tools", name: "实用工具" },
+  ];
+
+  onMount(() => {
+    initReveal();
+    initTilt();
+  });
+
+  const handleLinkClick = (e, url, isInternal = false) => {
+    if (isInternal && !isLoggedIn()) {
+      e.preventDefault();
+      navigate(`/login?redirect=${encodeURIComponent(url)}`);
+    }
+  };
+
+  const filteredProjects = () => {
+    if (activeCategory() === "all") return projectsData;
+    return projectsData.filter((p) => p.category === activeCategory());
+  };
+
+  return (
+    <section id="projects">
+      <div class="section-header reveal">
+        <h2>
+          <span class="gradient-text">精选项目 & 自建服务</span>
+        </h2>
+        <p>家庭数据中心（Homelab）的核心服务矩阵与真实端口直达</p>
+      </div>
+
+      <div class="project-filters reveal">
+        {categories.map((cat) => (
+          <button
+            type="button"
+            class={`filter-btn ${activeCategory() === cat.key ? "active" : ""}`}
+            onClick={() => setActiveCategory(cat.key)}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      <div class="projects-grid">
+        {filteredProjects().map((p) => (
+          <div class="project-card reveal tilt-card">
+            <div class="project-preview">
+              <div class="project-preview-bg">{p.icon}</div>
+            </div>
+            <div class="project-info">
+              <h3>{p.name}</h3>
+              <p>{p.desc}</p>
+              <div class="project-tech">
+                {p.tech.map((t) => (
+                  <span class="tech-tag">{t}</span>
+                ))}
+              </div>
+              <div class="project-links">
+                <a
+                  href={p.publicUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="project-link-btn"
+                  onClick={(e) => handleLinkClick(e, p.publicUrl, false)}
+                >
+                  🌐 公网访问
+                </a>
+                <a
+                  href={p.internalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="project-link-btn internal"
+                  onClick={(e) => handleLinkClick(e, p.internalUrl, true)}
+                >
+                  {isLoggedIn() ? "🔗 内网直达" : "🔒 内网 (需解锁)"}
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

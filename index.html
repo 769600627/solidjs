@@ -3,17 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>769600627 | 个人主页</title>
-    <meta name="description" content="769600627 - 个人主页">
-    <meta property="og:title" content="769600627 | 个人主页">
-    <meta property="og:description" content="769600627 - 个人主页">
+    <title>Mohican | 个人主页</title>
+    <meta name="description" content="Mohican - 全栈开发者、AI探索者、开源贡献者、自建派">
+    <meta property="og:title" content="Mohican | 个人主页">
+    <meta property="og:description" content="Mohican - 全栈开发者、AI探索者、开源贡献者、自建派">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.769600627.xyz">
     <meta property="og:locale" content="zh_CN">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    
+    <!-- Boot splash style -->
+    <style>
+      html, body {
+        margin: 0;
+        background: #0a0a0f;
+        color: #e8e8f0;
+      }
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(108, 92, 231, 0.18), transparent 55%),
+          radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0, 206, 201, 0.08), transparent 50%),
+          #0a0a0f;
+        transition: opacity 0.32s ease, visibility 0.32s ease, transform 0.32s ease;
+      }
+      #boot-splash.is-done {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.98);
+        pointer-events: none;
+      }
+      #boot-splash .boot-card {
+        position: relative;
+        width: min(320px, 88vw);
+        padding: 2.2rem 1.8rem 1.8rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 0 40px rgba(108, 92, 231, 0.12);
+      }
+      #boot-splash .boot-logo {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        font-size: 1.65rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin-bottom: 1.4rem;
+        background: linear-gradient(135deg, #6c5ce7, #00cec9);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
+      #boot-splash .boot-ring {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 1.1rem;
+        border-radius: 50%;
+        border: 2.5px solid rgba(255, 255, 255, 0.08);
+        border-top-color: #6c5ce7;
+        border-right-color: #00cec9;
+        animation: boot-spin 0.9s linear infinite;
+      }
+      #boot-splash .boot-text {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #e8e8f0;
+      }
+      #boot-splash .boot-bar {
+        margin: 1.25rem auto 0;
+        width: 70%;
+        height: 3px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+      #boot-splash .boot-bar > i {
+        display: block;
+        height: 100%;
+        width: 40%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #6c5ce7, #00cec9, #fd79a8);
+        animation: boot-bar 1.4s ease-in-out infinite;
+      }
+      @keyframes boot-spin {
+        to { transform: rotate(360deg); }
+      }
+      @keyframes boot-bar {
+        0% { transform: translateX(-120%); }
+        100% { transform: translateX(280%); }
+      }
+    </style>
 </head>
 <body>
+    <div id="boot-splash" role="status" aria-busy="true">
+      <div class="boot-card">
+        <div class="boot-logo">Mohican</div>
+        <div class="boot-ring"></div>
+        <p class="boot-text">正在加载...</p>
+        <div class="boot-bar"><i></i></div>
+      </div>
+    </div>
+
     <div id="root"></div>
+
+    <script>
+      (function () {
+        var splash = document.getElementById('boot-splash');
+        window.__dismissBootSplash = function () {
+          if (!splash || splash.classList.contains('is-done')) return;
+          splash.classList.add('is-done');
+          setTimeout(function () {
+            if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+          }, 400);
+        };
+        setTimeout(window.__dismissBootSplash, 3000);
+      })();
+    </script>
     <script type="module" src="/src/index.jsx"></script>
 </body>
 </html>

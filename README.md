@@ -1,50 +1,26 @@
-# DeltrivX 个人主页 (SolidJS 版)
+# Mohican 个人主页 (SolidJS 版)
 
-这个项目已经从传统的静态 HTML 迁移到了现代的 **SolidJS** 框架，并集成了多种炫酷的交互特效。
+基于 **SolidJS** + **Vite** 构建的高性能、暗黑赛博拟态风格的个人主页与家庭服务导航中枢（Homelab Dashboard）。
 
 ## 🚀 核心特性
-- **框架**: SolidJS + @solidjs/router (v0.14)
-- **打包工具**: Vite
-- **交互特效**:
-  - 鼠标跟随聚光灯背景
-  - 卡片 3D 物理倾斜效果 (Tilt Effect)
-  - 标题流光霓虹动画
-  - 页面平滑过渡 (View Transitions API)
-- **部署优化**:
-  - 自动路由重定向 (via .htaccess & index.php)
-  - Hash 路由模式，兼容所有服务器环境
-
-## 📁 目录结构
-- `src/`: 核心源代码目录
-  - `components/`: 可复用的页面组件
-  - `pages/`: 独立视图/页面组件
-  - `data/`: 静态数据
-  - `utils/`: 动画及工具函数
-  - `css/style.css`: 全局样式表
-  - `App.jsx` & `index.jsx`: 根组件与应用入口
-- `dist/`: 打包生成的正式上线文件
-- `vite.config.js`: 构建配置文件
-
-## 🛠️ 开发与构建
-### 安装依赖
-```bash
-npm install
-```
-
-### 开发环境预览
-```bash
-npm run dev
-```
-
-### 生产打包
-```bash
-npm run build
-```
-
-### 生产环境预览
-```bash
-npm run serve
-```
+- **框架**: SolidJS + @solidjs/router + @solidjs/meta
+- **打包工具**: Vite (构建输出至 `docs/` 供 GitHub Pages 自动部署)
+- **视觉与交互特效**:
+  - 动态粒子 Canvas 星空背景 + 鼠标斥力互动
+  - 鼠标跟随全局聚光灯光晕（Spotlight）
+  - 卡片 3D 物理倾斜效果（Tilt Effect）
+  - 渐变流光文字与霓虹边框呼吸动效
+  - 技能进度条滚动入场加载动效
+  - 统计数字滚动递增动效
+- **页面与功能矩阵**:
+  - **首页 (Home)**: Hero 打字机、探索更多导航卡片
+  - **关于我 (About)**: 折腾经历、数据中心统计矩阵、联系方式与留言
+  - **技能栈 (Skills)**: 前端、后端、DevOps、AI 智能体、影视媒体、私有云存储
+  - **精选项目 & 自建服务 (Projects)**: 飞牛 FnOS、Emby、HomeAssistant、MoviePilot、SubStore、Transmission、qBittorrent、青龙、VoceChat 等真实端口服务矩阵，支持密码鉴权保护
+  - **技术实战 (Articles)**: 9 篇完整的飞牛 NAS、Docker 容器隔离、双栈隧道、核显温度补丁等实战指南
+  - **私有服务解锁 (Login)**: 访问控制与状态持久化
+- **部署方案**:
+  - GitHub Actions 自动构建与部署到 GitHub Pages (`www.769600627.xyz`)
 
 ---
-*Made with ❤️ by DeltrivX*
+*Made with ❤️ by Mohican*
